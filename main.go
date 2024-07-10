@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -54,10 +55,11 @@ func main() {
 
 	app := fiber.New()
 
-	// app.Use(cors.New(cors.Config{
-	// 	AllowOrigins: "http://localhost:5173",
-	// 	AllowHeaders: "Origin,Content-Type,Accept",
-	// }))
+	// Use Fiber's built-in CORS middleware
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:5173",
+		AllowHeaders: "Origin, Content-Type, Accept",
+	}))
 
 	app.Get("/api/todos", getTodos)
 	app.Post("/api/todos", createTodo)
@@ -74,7 +76,6 @@ func main() {
 	}
 
 	log.Fatal(app.Listen("0.0.0.0:" + port))
-
 }
 
 func getTodos(c *fiber.Ctx) error {
@@ -138,7 +139,6 @@ func updateTodo(c *fiber.Ctx) error {
 	}
 
 	return c.Status(200).JSON(fiber.Map{"success": true})
-
 }
 
 func deleteTodo(c *fiber.Ctx) error {
